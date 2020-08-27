@@ -30,26 +30,15 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.b_update = new System.Windows.Forms.Button();
             this.l_status = new System.Windows.Forms.Label();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuIco = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.закрытьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.picture = new System.Windows.Forms.PictureBox();
+            this.t_load = new System.Windows.Forms.Timer(this.components);
             this.contextMenuIco.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picture)).BeginInit();
             this.SuspendLayout();
-            // 
-            // b_update
-            // 
-            this.b_update.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.b_update.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.b_update.Image = ((System.Drawing.Image)(resources.GetObject("b_update.Image")));
-            this.b_update.Location = new System.Drawing.Point(0, 0);
-            this.b_update.Margin = new System.Windows.Forms.Padding(0);
-            this.b_update.Name = "b_update";
-            this.b_update.Size = new System.Drawing.Size(25, 25);
-            this.b_update.TabIndex = 0;
-            this.b_update.UseVisualStyleBackColor = true;
-            this.b_update.Click += new System.EventHandler(this.b_update_Click);
             // 
             // l_status
             // 
@@ -82,9 +71,24 @@
             // закрытьToolStripMenuItem
             // 
             this.закрытьToolStripMenuItem.Name = "закрытьToolStripMenuItem";
-            this.закрытьToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.закрытьToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.закрытьToolStripMenuItem.Text = "Закрыть";
             this.закрытьToolStripMenuItem.Click += new System.EventHandler(this.закрытьToolStripMenuItem_Click);
+            // 
+            // picture
+            // 
+            this.picture.Location = new System.Drawing.Point(8, 0);
+            this.picture.Margin = new System.Windows.Forms.Padding(0);
+            this.picture.Name = "picture";
+            this.picture.Size = new System.Drawing.Size(25, 25);
+            this.picture.TabIndex = 3;
+            this.picture.TabStop = false;
+            this.picture.Click += new System.EventHandler(this.picture_Click);
+            // 
+            // t_load
+            // 
+            this.t_load.Interval = 3000;
+            this.t_load.Tick += new System.EventHandler(this.t_load_Tick);
             // 
             // Form1
             // 
@@ -92,8 +96,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(80, 25);
+            this.Controls.Add(this.picture);
             this.Controls.Add(this.l_status);
-            this.Controls.Add(this.b_update);
             this.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -104,18 +108,19 @@
             this.Text = "Form1";
             this.TopMost = true;
             this.contextMenuIco.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picture)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button b_update;
         private System.Windows.Forms.Label l_status;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ContextMenuStrip contextMenuIco;
         private System.Windows.Forms.ToolStripMenuItem закрытьToolStripMenuItem;
+        private System.Windows.Forms.PictureBox picture;
+        private System.Windows.Forms.Timer t_load;
     }
 }
 

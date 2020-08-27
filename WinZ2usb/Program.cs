@@ -14,6 +14,12 @@ namespace WinZ2usb
         [STAThread]
         static void Main()
         {
+            if (System.Diagnostics.Process.GetProcessesByName(System.Diagnostics.Process.GetCurrentProcess().ProcessName).Length > 1)
+
+            {
+                Reader.Reader.LoggerMessage("Приложение уже запущено!");
+                return;
+            }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
