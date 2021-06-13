@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Manifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../Resto.Front.Api/Common/Manifest.xsd">
+	<FileName>Resto.CashServer.Z2SlideEmulator2.dll</FileName>
+	<TypeName>Resto.CashServer.CardSlideEmulator.CardSlideEmulatorPluginContext</TypeName>
+	<ApiVersion>No</ApiVersion>
+</Manifest>

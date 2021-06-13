@@ -1,6 +1,6 @@
 ﻿
-using Resto.CashServer.Plugins;
 using Resto.CashServer.Z2SlideEmulator.Readers;
+using Resto.CashServer.Plugins;
 using Resto.Framework.Common;
 using Resto.Framework.Common.CardProcessor;
 using System;
@@ -136,7 +136,7 @@ namespace Resto.CashServer.CardSlideEmulator
             this.EscapeMe();
             if (track.Length == 0)
                 return;
-            UiDispatcher.ExecuteWithMessagePumping((Action)(() => ((Resto.Front.Common.Core.CardProcessor.CardProcessor)Resto.Front.Common.Core.CardProcessor.CardProcessor.Instance).ImitateCardRolled(new MagnetTrackData(string.Empty, track, string.Empty))));
+            ((Action)(() => ((Resto.Front.Controllers.CardProcessor)Resto.Front.Controllers.CardProcessor.Instance).ImitateCardRolled(new MagnetTrackData(string.Empty, track, string.Empty)))).ExecuteWithMessagePumping();
         }
         [STAThread]
         private void EscapeMe()

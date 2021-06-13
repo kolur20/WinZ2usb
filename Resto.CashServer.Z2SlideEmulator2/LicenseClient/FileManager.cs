@@ -9,6 +9,9 @@ namespace LicenseClient
         public FileManager()
         {
             path = Directory.GetCurrentDirectory() + "\\";
+            //path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+
         }
 
         internal string[] GetLicenseFile(string fileNameLicense)

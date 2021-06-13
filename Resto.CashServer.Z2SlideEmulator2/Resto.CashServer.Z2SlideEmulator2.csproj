@@ -9,22 +9,24 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Resto.CashServer.Z2SlideEmulator</RootNamespace>
     <AssemblyName>Resto.CashServer.Z2SlideEmulator2</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\..\iiko\iikoRMS\Front.Net\Plugins\Plugin.Front.CardSlideEmulatorZ2\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\..\iiko\iikoRMS\Front.Net\Plugins\Plugin.Front.CardSlideEmulatorZ2\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,16 +35,16 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Resto.CashServer">
-      <HintPath>SDK\Resto.CashServer.dll</HintPath>
+      <HintPath>..\..\..\..\iiko\iikoRMS\Front.Net\Resto.CashServer.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Resto.Framework, Version=6.2.1126.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>SDK\Resto.Framework.dll</HintPath>
+      <HintPath>..\..\..\..\iiko\iikoRMS\Front.Net\Resto.Framework.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Resto.Front.Common">
-      <HintPath>SDK\Resto.Front.Common.dll</HintPath>
+    <Reference Include="Resto.Front.Controllers">
+      <HintPath>..\..\..\..\iiko\iikoRMS\Front.Net\Resto.Front.Controllers.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
@@ -83,19 +85,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Manifest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="read.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="packages.config" />
-    <None Include="Resources\Resto.Framework.dll" />
     <Content Include="Resources\ZReader.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\CorFlag.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Resources\drv_z2usb_2.12.26.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

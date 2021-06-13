@@ -1,4 +1,5 @@
 ﻿using LicenseClient;
+using Resto.Framework.Common;
 using Serilog;
 using Serilog.Core;
 using System;
@@ -8,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using ZPort;
 using ZREADER;
+
 
 namespace Resto.CashServer.Z2SlideEmulator.Readers
 {
@@ -166,9 +168,9 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
         private void DoWrite(string keyStr)
         {
             logger.Debug($"Номер карты: {keyStr}");
-            Resto.Front.Common.Core.CardProcessor.CardProcessor.Instance
-                                .ImitateCardRolled(new Resto.Framework.Common.CardProcessor.MagnetTrackData
-                                (string.Empty, keyStr, string.Empty));
+          
+            Resto.Front.Controllers.CardProcessor.Instance
+                .ImitateCardRolled(new Resto.Framework.Common.CardProcessor.MagnetTrackData(string.Empty, keyStr, string.Empty));
         }
 
         //[STAThread]
@@ -265,10 +267,12 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
             {
                 lm.VerefecationLicenseDate();
                 DoWrite(int.Parse(serialNumber, System.Globalization.NumberStyles.HexNumber).ToString());
+                //DoWrite(serialNumber);
             }
             catch (OverflowException)
             {
                 DoWrite(GetHexToDecStr(serialNumber));
+                //doWrite(serialNumber);
             }
             catch (Exception ex)
             {
@@ -292,7 +296,7 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
                             CardTypeStrs[(int)pInfo.nType],
                                ZRIntf.CardNumToStr(pInfo.nNum, pInfo.nType));
 
-                            ///передача серийного номера с преобразованием
+                            ///передача серийного байтового номера для дальнейшего преобразования
                             DoWriteSR(ZRIntf.CardNumToStr(pInfo.nNum, pInfo.nType));
 
 
@@ -374,7 +378,8 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
         {
             try
             {
-                lm.VerefecationLicense();
+                string data = string.Empty;
+                lm.VerefecationLicense(ref data);
                 CheckMsgs += CheckNotifyMsgs;
 
                 m_timer = new System.Timers.Timer(1000);
@@ -400,6 +405,10 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
         {
             try
             {
+                if (CheckMsgs is null || m_timer is null)
+                {
+                    throw new NullReferenceException();
+                }
                 CheckMsgs -= CheckNotifyMsgs;
                 m_timer.Stop();
                 m_timer.Elapsed -= M_timer_Elapsed;
@@ -519,6 +528,7 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
         [STAThread]
         public void InitializaeZ2()// System.Windows.Forms.Label label)
         {
+           
             //status = label;
             var rPorts = EnumSerialPorts();
             if (rPorts == null || rPorts.Count == 0)
@@ -530,6 +540,9 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
             int hr;
             try
             {
+                var data = string.Empty;
+                if (lm.VerefecationLicense(ref data))
+                    logger.Debug(data);
                 hr = ZRIntf.ZR_Initialize(ZPIntf.ZP_IF_NO_MSG_LOOP);
                 if (hr < 0)
                 {
@@ -543,6 +556,12 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
             {
                 logger.Fatal($"{ex.Message}");
                 //Red();
+                return;
+            }
+            catch (Exception ex)
+            {
+                logger.Error($"{ex.Message}");
+              
                 return;
             }
             try

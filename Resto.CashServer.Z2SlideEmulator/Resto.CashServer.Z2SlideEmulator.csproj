@@ -32,10 +32,6 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Resto.CashServer">
-      <HintPath>.\Resto.CashServer.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Resto.Framework">
       <HintPath>.\Resto.Framework.dll</HintPath>
       <Private>False</Private>

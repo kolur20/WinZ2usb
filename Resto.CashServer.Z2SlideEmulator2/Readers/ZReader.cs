@@ -987,32 +987,41 @@ namespace ZREADER
         // Utils
         public static string CardNumToStr(Byte[] aNum, ZR_CARD_TYPE nType)
         {
-            string s;
-            switch (nType)
-            {
-                case ZR_CARD_TYPE.ZR_CD_EM:
-                    s = string.Format("{0},{1:D5}", aNum[3], aNum[1] + (aNum[2] << 8));
-                    break;
-                case ZR_CARD_TYPE.ZR_CD_HID:
-                    {
-                        int nFCnt = Math.Min(aNum[0] - 2, 4);
-                        int nFacility = 0;
-                        int nOffs = 0;
-                        for (int i = 0; i < nFCnt; i++, nOffs += 8)
-                            nFacility = (aNum[3 + i] << nOffs);
-                        s = string.Format("[{0}] {1:D5}", nFacility.ToString(string.Format("X{0}", nFCnt*2)), aNum[1] + (aNum[2] << 8));
-                    }
-                    break;
-                default:
-                    {
-                        s = "";
-                        //for (int i = aNum[0]; i > 0; i--)
-                        //    s = s + aNum[i].ToString("X2");
-                        for (int i = 1; i <= aNum[0]; i++)
-                            s = s + aNum[i].ToString("X2");
-                    }
-                    break;
-            }
+            //просто забрать все байты карты подряд
+            string s = "";
+            for (int i = 1; i <= aNum[0]; i++)
+                s = s + aNum[i].ToString("X2");
+
+            //реализация с разными типами карт и длиной байт
+            //если тип распознать не удолось, забрать все байты подряд
+            //string s;
+            //switch (nType)
+            //{
+            //    case ZR_CARD_TYPE.ZR_CD_EM:
+            //        s = string.Format("{0:D3}{1:D5}", aNum[3], aNum[1] + (aNum[2] << 8));
+            //        //вариант с запятой как на карте
+            //        //s = string.Format("{0},{1:D5}", aNum[3], aNum[1] + (aNum[2] << 8));
+            //        break;
+            //    case ZR_CARD_TYPE.ZR_CD_HID:
+            //        {
+            //            int nFCnt = Math.Min(aNum[0] - 2, 4);
+            //            int nFacility = 0;
+            //            int nOffs = 0;
+            //            for (int i = 0; i < nFCnt; i++, nOffs += 8)
+            //                nFacility = (aNum[3 + i] << nOffs);
+            //            s = string.Format("[{0}] {1:D5}", nFacility.ToString(string.Format("X{0}", nFCnt*2)), aNum[1] + (aNum[2] << 8));
+            //        }
+            //        break;
+            //    default:
+            //        {
+            //            s = "";
+            //            //for (int i = aNum[0]; i > 0; i--)
+            //            //    s = s + aNum[i].ToString("X2");
+            //            for (int i = 1; i <= aNum[0]; i++)
+            //                s = s + aNum[i].ToString("X2");
+            //        }
+            //        break;
+            //}
             return s;
         }
     }

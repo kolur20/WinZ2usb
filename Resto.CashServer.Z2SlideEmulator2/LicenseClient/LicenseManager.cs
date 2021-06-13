@@ -27,7 +27,7 @@ namespace LicenseClient
             else
                 throw new Exception("Истек срок действия лицензии");
         }
-        public bool VerefecationLicense()
+        public bool VerefecationLicense(ref string data)
         {
             try
             {
@@ -48,6 +48,7 @@ namespace LicenseClient
                         licenseData.Id == systemInfo.ProcessorID &&
                         licenseData.Serial == systemInfo.MatheBoardID)
                 {
+                    data = string.Format($"Лицензия выдана {licenseData.CompanyName} дейсвительна до {DateTime.Parse(licenseData.Expiration).ToShortDateString()}");
                     return VerefecationLicenseDate() ? true :
                         throw new Exception("Истек срок действия лицензии");
                 }
