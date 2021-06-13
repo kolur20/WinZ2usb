@@ -26,12 +26,15 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\iiko\iikoRMS\Front.Net\Plugins\Plugin.Front.CardSlideEmulatorZ2\</OutputPath>
+    <OutputPath>..\Рабочие сборки\Plugin.Front.CardSlideEmulatorZ2\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LicenseClient">
+      <HintPath>..\..\License\Сборки\LicenseClientLibrary\LicenseClient.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Resto.CashServer">
@@ -73,11 +76,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LicenseClient\Coder.cs" />
-    <Compile Include="LicenseClient\FileManager.cs" />
-    <Compile Include="LicenseClient\LicenseData.cs" />
-    <Compile Include="LicenseClient\LicenseManager.cs" />
-    <Compile Include="LicenseClient\LicenseSystemInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Readers\Reader.cs" />
     <Compile Include="Readers\ZPort.cs" />
     <Compile Include="Readers\ZReader.cs" />
@@ -96,6 +99,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\drv_z2usb_2.12.26.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

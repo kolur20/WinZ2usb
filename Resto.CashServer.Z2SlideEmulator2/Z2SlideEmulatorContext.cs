@@ -29,8 +29,15 @@ namespace Resto.CashServer.CardSlideEmulator
         {
             this.isMainControllerExists = PluginEnvironmentHelper.IsMainControllerExists(pluginEnvironment);
             reader = new Reader();
-            reader.InitializaeZ2();
-            reader.StartNotifyTask();
+            try
+            {
+                reader.InitializaeZ2();
+                reader.StartNotifyTask();
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
         [STAThread]
         public void AfterServerStarted()
@@ -72,9 +79,14 @@ namespace Resto.CashServer.CardSlideEmulator
             if (e.Key == Key.F6)
                 UiDispatcher.ExecuteAsync((Action)(() =>
                 {
-                    reader.StopNotifyTask();
-                    reader.InitializaeZ2();
-                    reader.StartNotifyTask();
+                    try
+                    {
+                        reader.StopNotifyTask();
+                        reader.InitializaeZ2();
+                        reader.StartNotifyTask();
+                    }
+                    catch (Exception)
+                    { return; }
                 }));
             if (e.Key != Key.F4)
                 return;

@@ -10,7 +10,6 @@ using System.Threading;
 using ZPort;
 using ZREADER;
 
-
 namespace Resto.CashServer.Z2SlideEmulator.Readers
 {
     class Reader
@@ -45,18 +44,11 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
         //#endregion
 
         //считывание данных из блоков
-        [STAThread]
+        //ДАННЫЙ ФОРМАТ НЕ ИСПОЛЬЗУЕТСЯ
+        /*[STAThread]
         void DoRead1K4K(Byte[] rNum, ZR_CARD_TYPE nCdType)
         {
-            try
-            {
-                lm.VerefecationLicenseDate();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-                return;
-            }
+            
             int startTick;
             ZRIntf.ZR_Rd_SetCapture(m_hRd);
             try
@@ -163,7 +155,7 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
             TimeSpan rezultTime = TimeSpan.FromMilliseconds(Environment.TickCount - startTick);
             //logger.Info("Общее время: {0}", rezultTime);
         }
-
+        */
         [STAThread]
         private void DoWrite(string keyStr)
         {
@@ -260,17 +252,39 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
         //    Console.WriteLine("Успешно.");
         //}
 
+
+
+        //преобразования с байтовым треком для дальнейшей передачи во фронт
         [STAThread]
         void DoWriteSR(string serialNumber)
         {
             try
             {
-                lm.VerefecationLicenseDate();
-                DoWrite(int.Parse(serialNumber, System.Globalization.NumberStyles.HexNumber).ToString());
+                //реверс байтовой последовательноста
+                if (Properties.Settings.Default.UseRevrseByteOnCard)
+                {
+
+                    var c = $"{serialNumber[0]}{serialNumber[1]}";
+                    for (var i = 2; i < serialNumber.Length; i++)
+                        c += i % 2.0 == 0 ? $" {serialNumber[i]}" : $"{serialNumber[i]}";
+                    serialNumber = string.Join("", c.Split(' ').ToArray().Reverse());
+
+
+                }
+
+                //преобразование в deс
+                if (Properties.Settings.Default.ConvertTrackKardToDec)
+                {
+                    DoWrite(int.Parse(serialNumber, System.Globalization.NumberStyles.HexNumber).ToString());
+                    return;
+                }
+                DoWrite(serialNumber);
+
                 //DoWrite(serialNumber);
             }
             catch (OverflowException)
             {
+
                 DoWrite(GetHexToDecStr(serialNumber));
                 //doWrite(serialNumber);
             }
@@ -379,7 +393,7 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
             try
             {
                 string data = string.Empty;
-                lm.VerefecationLicense(ref data);
+                
                 CheckMsgs += CheckNotifyMsgs;
 
                 m_timer = new System.Timers.Timer(1000);
@@ -528,21 +542,25 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
         [STAThread]
         public void InitializaeZ2()// System.Windows.Forms.Label label)
         {
-           
-            //status = label;
-            var rPorts = EnumSerialPorts();
-            if (rPorts == null || rPorts.Count == 0)
-            {
-                logger.Fatal("Считыватель не найден...");
-                //Red();
-                return;
-            }
-            int hr;
+
             try
             {
+                //проверка лицензии
                 var data = string.Empty;
-                if (lm.VerefecationLicense(ref data))
-                    logger.Debug(data);
+                lm.VerefecationLicense(ref data);
+                logger.Debug(data);
+                
+
+                //status = label;
+                var rPorts = EnumSerialPorts();
+                if (rPorts == null || rPorts.Count == 0)
+                {
+                    logger.Fatal("Считыватель не найден...");
+                    //Red();
+                    return;
+                }
+                int hr;
+
                 hr = ZRIntf.ZR_Initialize(ZPIntf.ZP_IF_NO_MSG_LOOP);
                 if (hr < 0)
                 {
@@ -551,21 +569,11 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
                     //Console.ReadLine();
                     return;
                 }
-            }
-            catch (System.DllNotFoundException ex)
-            {
-                logger.Fatal($"{ex.Message}");
-                //Red();
-                return;
-            }
-            catch (Exception ex)
-            {
-                logger.Error($"{ex.Message}");
-              
-                return;
-            }
-            try
-            {
+            
+
+
+
+            
                 /////подключение к ком порту
                 /////
                 while (!Rd_Open(rPorts.First()))
@@ -614,14 +622,26 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
 
 
             }
-            catch (Exception)
+            
+            catch (System.DllNotFoundException ex)
+            {
+                logger.Fatal($"{ex.Message}");
+                throw new Exception($"{ex.Message}");
+                
+            }
+            catch (Exception ex)
             {
                 StopNotifyTask();
                 if (m_hRd != IntPtr.Zero)
                     ZRIntf.ZR_CloseHandle(m_hRd);
                 ZRIntf.ZR_Finalyze();
-                //Red();
+
+                logger.Error($"{ex.Message}");
+                logger.Debug($"Подключение к считывателю не произошло, установите лицензию");
+                throw new Exception($"{ex.Message}");
+
             }
+            
         }
 
     }
