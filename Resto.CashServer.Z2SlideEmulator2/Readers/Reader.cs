@@ -44,8 +44,8 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
         //#endregion
 
         //считывание данных из блоков
-        //ДАННЫЙ ФОРМАТ НЕ ИСПОЛЬЗУЕТСЯ
-        /*[STAThread]
+        //ДАННЫЙ ФОРМАТ ИСПОЛЬЗУЕТСЯ для считвания данный в определенном блоке
+        [STAThread]
         void DoRead1K4K(Byte[] rNum, ZR_CARD_TYPE nCdType)
         {
             
@@ -66,8 +66,8 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
                 int nMax = (nCdType == ZR_CARD_TYPE.ZR_CD_4K) ? 256 / 32 : 64 / 8;
                 int i, nSectN, nSBlockN, nSBlockMax;
                 Byte[] aBuf = new Byte[16]; // 1 блок по 16 байт
-                i = 4;
-                nMax = 5;
+                i = Properties.Settings.Default.BlockForRead;
+                nMax = i + 1;
                 while (i < nMax) // цикл по блокам
                 {
                     if ((nCdType == ZR_CARD_TYPE.ZR_CD_4K) && (i > 127))
@@ -136,7 +136,7 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
                     }
                     //KeyboardSend.KeyDown(System.Windows.Forms.Keys.Enter);
                     logger.Debug($"Трек карты: {keyStr}");
-                    DoWrite(keyStr);
+                    DoWriteSR(keyStr);
                     
 
                     if (nSBlockN == (nSBlockMax - 1))
@@ -146,7 +146,7 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
                     }
                     i++;
                 }
-                logger.Debug("Успешно. ");
+                //logger.Debug("Успешно. ");
             }
             finally
             {
@@ -155,7 +155,7 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
             TimeSpan rezultTime = TimeSpan.FromMilliseconds(Environment.TickCount - startTick);
             //logger.Info("Общее время: {0}", rezultTime);
         }
-        */
+         
         [STAThread]
         private void DoWrite(string keyStr)
         {
@@ -304,39 +304,46 @@ namespace Resto.CashServer.Z2SlideEmulator.Readers
                 switch (nMsg)
                 {
                     case ZRIntf.ZR_RN_CARD_INSERT:
-                        {
-                            ZR_CARD_INFO pInfo = (ZR_CARD_INFO)Marshal.PtrToStructure(nMsgParam, typeof(ZR_CARD_INFO));
-                            logger.Debug("Карта поднесена {0} {1}",
-                            CardTypeStrs[(int)pInfo.nType],
-                               ZRIntf.CardNumToStr(pInfo.nNum, pInfo.nType));
+                    {
+                        ZR_CARD_INFO pInfo = (ZR_CARD_INFO)Marshal.PtrToStructure(nMsgParam, typeof(ZR_CARD_INFO));
+                        logger.Debug("Карта поднесена {0} {1}",
+                        CardTypeStrs[(int)pInfo.nType],
+                            ZRIntf.CardNumToStr(pInfo.nNum, pInfo.nType));
 
+
+                        if (Properties.Settings.Default.ReadDataInBlock)
+                        {
+                            switch (pInfo.nType)
+                            {
+                                //case ZR_CARD_TYPE.ZR_CD_UL:
+                                //    //DoReadUL(pInfo.nNum, pInfo.nType);
+                                //    break;
+                                case ZR_CARD_TYPE.ZR_CD_1K:
+                                case ZR_CARD_TYPE.ZR_CD_4K:
+                                    DoRead1K4K(pInfo.nNum, pInfo.nType);
+                                    break;
+                                default:
+                                    DoWriteSR(ZRIntf.CardNumToStr(pInfo.nNum, pInfo.nType));
+                                    break;
+                            }
+                        }
+                        else
+                        {
                             ///передача серийного байтового номера для дальнейшего преобразования
                             DoWriteSR(ZRIntf.CardNumToStr(pInfo.nNum, pInfo.nType));
-
-
-                            //switch (pInfo.nType)
-                            //{
-                            //    case ZR_CARD_TYPE.ZR_CD_UL:
-                            //        //DoReadUL(pInfo.nNum, pInfo.nType);
-                            //        break;
-                            //    case ZR_CARD_TYPE.ZR_CD_1K:
-                            //    case ZR_CARD_TYPE.ZR_CD_4K:
-                            //        DoRead1K4K(pInfo.nNum, pInfo.nType);
-                            //        break;
-                            //    default:
-                            //        //logger.Error("Не могу прочитать карту.");
-                            //        break;
-                            //}
                         }
-                        break;
+
+
+                    }
+                    break;
                     case ZRIntf.ZR_RN_CARD_REMOVE:
-                        {
-                            ZR_CARD_INFO pInfo = (ZR_CARD_INFO)Marshal.PtrToStructure(nMsgParam, typeof(ZR_CARD_INFO));
-                            logger.Debug("Удалена карта {0} {1}",
-                                 CardTypeStrs[(int)pInfo.nType],
-                                 ZRIntf.CardNumToStr(pInfo.nNum, pInfo.nType));
-                        }
-                        break;
+                    {
+                        ZR_CARD_INFO pInfo = (ZR_CARD_INFO)Marshal.PtrToStructure(nMsgParam, typeof(ZR_CARD_INFO));
+                        logger.Debug("Удалена карта {0} {1}",
+                                CardTypeStrs[(int)pInfo.nType],
+                                ZRIntf.CardNumToStr(pInfo.nNum, pInfo.nType));
+                    }
+                    break;
                 }
             }
             if (hr == ZPIntf.ZP_S_NOTFOUND)

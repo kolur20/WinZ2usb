@@ -37,13 +37,37 @@ namespace Resto.CashServer.Z2SlideEmulator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool UseRevrseByteOnCard {
             get {
                 return ((bool)(this["UseRevrseByteOnCard"]));
             }
             set {
                 this["UseRevrseByteOnCard"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ReadDataInBlock {
+            get {
+                return ((bool)(this["ReadDataInBlock"]));
+            }
+            set {
+                this["ReadDataInBlock"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int BlockForRead {
+            get {
+                return ((int)(this["BlockForRead"]));
+            }
+            set {
+                this["BlockForRead"] = value;
             }
         }
     }
